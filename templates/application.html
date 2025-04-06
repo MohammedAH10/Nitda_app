@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Application - NITDA Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Navigation</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{{ url_for('profile') }}" class="list-group-item list-group-item-action">My Profile</a>
+                <a href="{{ url_for('documents') }}" class="list-group-item list-group-item-action">Documents</a>
+                <a href="{{ url_for('application') }}" class="list-group-item list-group-item-action active">Apply</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ current_user.user_type.upper() }} Application</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" name="application_type" value="{{ current_user.user_type }}">
+                    
+                    <div class="mb-3">
+                        <label for="placement_preference" class="form-label">Placement Preference</label>
+                        <select class="form-control" id="placement_preference" name="placement_preference" required>
+                            <option value="">Select your preference</option>
+                            <option value="Software Development">Software Development</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="IT Support">IT Support</option>
+                            <option value="Network Administration">Network Administration</option>
+                            <option value="Cybersecurity">Cybersecurity</option>
+                            <option value="Digital Marketing">Digital Marketing</option>
+                        </select>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label">Expected Start Date</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="duration" class="form-label">Duration</label>
+                            <select class="form-control" id="duration" name="duration" required>
+                                <option value="3 months">3 Months</option>
+                                <option value="6 months">6 Months</option>
+                                <option value="12 months">12 Months</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="additional_info" class="form-label">Additional Information</label>
+                        <textarea class="form-control" id="additional_info" name="additional_info" rows="4"></textarea>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <p class="mb-0"><strong>Note:</strong> Please ensure you have uploaded all required documents before submitting your application.</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">Submit Application</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

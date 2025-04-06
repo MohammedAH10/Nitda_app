@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - NITDA Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Admin Panel</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('admin_dashboard') }}" class="list-group-item list-group-item-action active">Dashboard</a>
+                <a href="#" class="list-group-item list-group-item-action">User Management</a>
+                <a href="#" class="list-group-item list-group-item-action">Placements</a>
+                <a href="#" class="list-group-item list-group-item-action">Reports</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">SIWES</h5>
+                        <h2>{{ stats.siwes }}</h2>
+                        <p class="mb-0">Applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">NYSC</h5>
+                        <h2>{{ stats.nysc }}</h2>
+                        <p class="mb-0">Applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-dark bg-warning">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Pending</h5>
+                        <h2>{{ stats.pending }}</h2>
+                        <p class="mb-0">Applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Approved</h5>
+                        <h2>{{ stats.approved }}</h2>
+                        <p class="mb-0">Applications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Applications</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-primary">Export Data</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Applicant</th>
+                                <th>Type</th>
+                                <th>Preference</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications %}
+                                <tr>
+                                    <td>{{ app['id'] }}</td>
+                                    <td>{{ app['full_name'] or app['email'] }}</td>
+                                    <td>{{ app['application_type'].upper() }}</td>
+                                    <td>{{ app['placement_preference'] }}</td>
+                                    <td>
+                                        {% if app['status'] == 'pending' %}
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        {% elif app['status'] == 'approved' %}
+                                            <span class="badge bg-success">Approved</span>
+                                        {% elif app['status'] == 'rejected' %}
+                                            <span class="badge bg-danger">Rejected</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ app['status'] }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ app['created_at'] }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin_application', app_id=app['id']) }}" class="btn btn-sm btn-outline-primary">Review</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

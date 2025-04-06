@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - NITDA Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Navigation</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{{ url_for('profile') }}" class="list-group-item list-group-item-action active">My Profile</a>
+                <a href="{{ url_for('documents') }}" class="list-group-item list-group-item-action">Documents</a>
+                <a href="{{ url_for('application') }}" class="list-group-item list-group-item-action">Apply</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Personal Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="full_name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" value="{{ profile['full_name'] or '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ profile['phone'] or '' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" id="address" name="address" rows="2" required>{{ profile['address'] or '' }}</textarea>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="institution" class="form-label">Institution</label>
+                            <input type="text" class="form-control" id="institution" name="institution" value="{{ profile['institution'] or '' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="course" class="form-label">Course of Study</label>
+                            <input type="text" class="form-control" id="course" name="course" value="{{ profile['course'] or '' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="graduation_date" class="form-label">Graduation Date</label>
+                        <input type="date" class="form-control" id="graduation_date" name="graduation_date" value="{{ profile['graduation_date'] or '' }}" required>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

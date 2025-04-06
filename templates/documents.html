@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}My Documents - NITDA Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Navigation</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{{ url_for('profile') }}" class="list-group-item list-group-item-action">My Profile</a>
+                <a href="{{ url_for('documents') }}" class="list-group-item list-group-item-action active">Documents</a>
+                <a href="{{ url_for('application') }}" class="list-group-item list-group-item-action">Apply</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Upload Document</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="document_type" class="form-label">Document Type</label>
+                            <select class="form-control" id="document_type" name="document_type" required>
+                                {% if current_user.user_type == 'siwes' %}
+                                    <option value="school_id">School ID</option>
+                                    <option value="introduction_letter">Introduction Letter</option>
+                                    <option value="transcript">Academic Transcript</option>
+                                {% else %}
+                                    <option value="nysc_callup_letter">NYSC Call-up Letter</option>
+                                    <option value="state_code">State Code</option>
+                                    <option value="degree_certificate">Degree Certificate</option>
+                                    <option value="valid_id">Valid ID</option>
+                                {% endif %}
+                                <option value="other">Other Document</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="document" class="form-label">Select File</label>
+                            <input class="form-control" type="file" id="document" name="document" required>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button type="submit" class="btn btn-primary">Upload Document</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">My Documents</h5>
+            </div>
+            <div class="card-body">
+                {% if documents %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Document Type</th>
+                                    <th>Filename</th>
+                                    <th>Uploaded Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doc in documents %}
+                                    <tr>
+                                        <td>{{ doc['document_type'] }}</td>
+                                        <td>{{ doc['filename'] }}</td>
+                                        <td>{{ doc['uploaded_at'] }}</td>
+                                        <td>
+                                            {% if doc['verified'] %}
+                                                <span class="badge bg-success">Verified</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p>You haven't uploaded any documents yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

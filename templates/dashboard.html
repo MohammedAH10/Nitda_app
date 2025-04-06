@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - NITDA Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Navigation</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('dashboard') }}" class="list-group-item list-group-item-action active">Dashboard</a>
+                <a href="{{ url_for('profile') }}" class="list-group-item list-group-item-action">My Profile</a>
+                <a href="{{ url_for('documents') }}" class="list-group-item list-group-item-action">Documents</a>
+                <a href="{{ url_for('application') }}" class="list-group-item list-group-item-action">Apply</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Completion</h5>
+            </div>
+            <div class="card-body">
+                <div class="progress profile-progress mb-2">
+                    <div class="progress-bar" role="progressbar" style="width: {{ completion_percentage }}%;" aria-valuenow="{{ completion_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <p class="text-center mb-0">{{ completion_percentage }}% Complete</p>
+                {% if completion_percentage < 100 %}
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-primary">Complete Profile</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Dashboard</h5>
+                <a href="{{ url_for('application') }}" class="btn btn-sm btn-primary">New Application</a>
+            </div>
+            <div class="card-body">
+                <h6>Welcome{% if profile and profile['full_name'] %}, {{ profile['full_name'] }}{% endif %}</h6>
+                <p>This is your NITDA portal dashboard. From here, you can manage your profile, documents, and applications.</p>
+                
+                {% if completion_percentage < 100 %}
+                    <div class="alert alert-warning">
+                        <h6 class="alert-heading">Profile Incomplete</h6>
+                        <p class="mb-0">Please complete your profile to proceed with your application.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">My Applications</h5>
+            </div>
+            <div class="card-body">
+                {% if applications %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Placement</th>
+                                    <th>Status</th>
+                                    <th>Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for app in applications %}
+                                    <tr>
+                                        <td>{{ app['application_type'].upper() }}</td>
+                                        <td>{{ app['placement_preference'] }}</td>
+                                        <td>
+                                            {% if app['status'] == 'pending' %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% elif app['status'] == 'approved' %}
+                                                <span class="badge bg-success">Approved</span>
+                                            {% elif app['status'] == 'rejected' %}
+                                                <span class="badge bg-danger">Rejected</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ app['status'] }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ app['created_at'] }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-info">View</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <p class="mb-3">You haven't submitted any applications yet.</p>
+                        <a href="{{ url_for('application') }}" class="btn btn-primary">Start Application</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Application - NITDA Portal{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Admin Panel</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{{ url_for('admin_dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="#" class="list-group-item list-group-item-action">User Management</a>
+                <a href="#" class="list-group-item list-group-item-action">Placements</a>
+                <a href="#" class="list-group-item list-group-item-action">Reports</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-9">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Application Review</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Applicant Information</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Name:</th>
+                                <td>{{ application['full_name'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Email:</th>
+                                <td>{{ application['email'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Phone:</th>
+                                <td>{{ application['phone'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Institution:</th>
+                                <td>{{ application['institution'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Course:</th>
+                                <td>{{ application['course'] }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Application Details</h6>
+                        <table class="table table-sm">
+                            <tr>
+                                <th>Type:</th>
+                                <td>{{ application['application_type'].upper() }}</td>
+                            </tr>
+                            <tr>
+                                <th>Placement:</th>
+                                <td>{{ application['placement_preference'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Start Date:</th>
+                                <td>{{ application['start_date'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Duration:</th>
+                                <td>{{ application['duration'] }}</td>
+                            </tr>
+                            <tr>
+                                <th>Status:</th>
+                                <td>
+                                    {% if application['status'] == 'pending' %}
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    {% elif application['status'] == 'approved' %}
+                                        <span class="badge bg-success">Approved</span>
+                                    {% elif application['status'] == 'rejected' %}
+                                        <span class="badge bg-danger">Rejected</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ application['status'] }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h6>Additional Information</h6>
+                    <p>{{ application['additional_info'] or 'None provided' }}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h6>Submitted Documents</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Document Type</th>
+                                    <th>Filename</th>
+                                    <th>Uploaded Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for doc in documents %}
+                                    <tr>
+                                        <td>{{ doc['document_type'] }}</td>
+                                        <td>{{ doc['filename'] }}</td>
+                                        <td>{{ doc['uploaded_at'] }}</td>
+                                        <td>
+                                            {% if doc['verified'] %}
+                                                <span class="badge bg-success">Verified</span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Update Application Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="pending" {% if application['status'] == 'pending' %}selected{% endif %}>Pending</option>
+                            <option value="approved" {% if application['status'] == 'approved' %}selected{% endif %}>Approved</option>
+                            <option value="rejected" {% if application['status'] == 'rejected' %}selected{% endif %}>Rejected</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="feedback" class="form-label">Feedback / Notes</label>
+                        <textarea class="form-control" id="feedback" name="feedback" rows="4">{{ application['feedback'] or '' }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary me-2">Back</a>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
